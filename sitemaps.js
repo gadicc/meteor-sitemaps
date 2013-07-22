@@ -1,6 +1,6 @@
-var sitemaps = {
+sitemaps = {
   list: {}
-}	
+};	
 
 if (typeof Number.lpad === "undefined") {
   Number.prototype.lpad = function(length) {
