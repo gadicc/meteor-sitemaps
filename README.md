@@ -22,7 +22,7 @@ sitemaps.add('/sitemap.xml', function() {
 
 You can call <code>sitemaps.add()</code> as many times as you like.  More details on the format below.
 Note that the <code>url</code> is automatically added to the data served from
-<code>/robots.txt</code>.
+<code>/robots.txt</code> (since 0.0.4, using the robots.txt smart package).
 
 ### Full Usage
 
@@ -34,7 +34,7 @@ sitemaps.add(url, list);
 
 The obvious example is <code>/sitemap.xml</code>.  You can call the function
 more than once to have many different (types of) sitemaps.  The URL is added
-to the output of /robots.txt automatically.
+to the output of /robots.txt automatically (since 0.0.4).
 
 Note that the location is [important](http://www.sitemaps.org/protocol.html#location).  A sitemap can only
 reference other URLs in it's own path or descendant paths.  e.g. /sitemap.xml
