@@ -3,7 +3,7 @@
 ### Quick Start
 
 ```bash
-mrt add sietmaps
+mrt add sitemaps
 ```
 
 1. Create <code>server/sitemaps.js</code> which contains something like:
@@ -21,14 +21,8 @@ sitemaps.add('/sitemap.xml', function() {
 ```
 
 You can call <code>sitemaps.add()</code> as many times as you like.  More details on the format below.
-
-2. You should also add lines to your <code>public/robots.txt</code> like:
-
-```
-Sitemap: http://www.url.com/sitemap.xml
-```
-
-This may be automated in the future.
+Note that the <code>url</code> is automatically added to the data served from
+<code>/robots.txt</code>.
 
 ### Full Usage
 
@@ -39,8 +33,8 @@ sitemaps.add(url, list);
 #### URL
 
 The obvious example is <code>/sitemap.xml</code>.  You can call the function
-more than once to have many different (types of) sitemaps.  You should also
-add the same URL to your <code>public/robots.txt</code> (see above).
+more than once to have many different (types of) sitemaps.  The URL is added
+to the output of /robots.txt automatically.
 
 Note that the location is [important](http://www.sitemaps.org/protocol.html#location).  A sitemap can only
 reference other URLs in it's own path or descendant paths.  e.g. /sitemap.xml
@@ -71,3 +65,21 @@ information in a Collection).
 
 Other options might come soon, e.g. to automatically use routes in your app
 to build the sitemap.
+
+#### Example (from Meteorpedia)
+
+```js
+	sitemaps.add('/mw_AllPages_sitemap.xml', function() {
+		var out = [], pages = WikiPages.find().fetch();
+		_.each(pages, function(page) {
+			out.push({
+				page: 'read/' + page.name,
+				lastmod: page.lastUpdated
+			});
+		});
+		return out;
+	});
+```
+
+You can see this output here:
+http://www.meteorpedia.com/mw_AllPages_sitemap.xml

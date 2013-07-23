@@ -1,14 +1,16 @@
 sitemaps = {
   list: {}
-};	
+};
 
 if (typeof Number.lpad === "undefined") {
   Number.prototype.lpad = function(length) {
-      var str = this.toString();
-      while (str.length < length)
-          str = "0" + str;
-      return str;
-  }
+    "use strict";
+    var str = this.toString();
+    while (str.length < length) {
+      str = "0" + str;
+    }
+    return str;
+  };
 }
 
 /*
@@ -18,21 +20,22 @@ if (typeof Number.lpad === "undefined") {
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
 __meteor_bootstrap__.app.use(function(req, res, next) {
-		var out, urlStart, pages, d, urls;
+    "use strict";
+		var out, urlStart, pages, urls;
 
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
       return next();
 
     urlStart = (req.headers['x-forwarded-proto']
-        ? req.headers['x-forwarded-proto']
-        : req.protocol) + '://' + req.headers.host + '/';
+      ? req.headers['x-forwarded-proto'] : req.protocol)
+      + '://' + req.headers.host + '/';
 
 		pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
       pages = pages();
     else if (!_.isArray(pages))
-      throw new TypeError("sitemaps.add expects an array or function");
+      throw new TypeError("sitemaps.add() expects an array or function");
 
 		out = '<?xml version="1.0" encoding="UTF-8"?>\n\n'
 			+ '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n\n';
@@ -47,7 +50,7 @@ __meteor_bootstrap__.app.use(function(req, res, next) {
 				+ d.getUTCSeconds().lpad(2) + '+00:00';
 
 			out += '   <url>\n'
-				 + '      <loc>' + urlStart + escape(page.page) + '</loc>\n';
+        + '      <loc>' + urlStart + escape(page.page) + '</loc>\n';
 
       if (page.lastmod)
 				out += '      <lastmod>' + w3cDateTimeTS + '</lastmod>\n';
@@ -69,8 +72,10 @@ __meteor_bootstrap__.app.use(function(req, res, next) {
 });
 
 sitemaps.add = function(url, func) {
+  "use strict";
   sitemaps.list[url] = func;
-}
+  robots.addLine('Sitemap: ' + process.env.ROOT_URL + url);
+};
 
 /*
 sitemaps.add('/sitemap.xml', function() {
