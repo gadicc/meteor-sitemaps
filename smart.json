@@ -3,7 +3,7 @@
     "description": "functions to easily output valid sitemaps",
     "homepage": "https://github.com/gadicohen/meteor-sitemaps",
     "author": "Gadi Cohen <dragon@wastelands.net>",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "git": "https://github.com/gadicohen/meteor-sitemaps.git",
 	"packages": {
 		"robots.txt": "0.0.1"
