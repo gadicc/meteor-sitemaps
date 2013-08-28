@@ -19,7 +19,9 @@ if (typeof Number.lpad === "undefined") {
  */
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
-__meteor_bootstrap__.app.use(function(req, res, next) {
+var app = typeof WebApp != 'undefined'
+        ? WebApp.connectHandlers : __meteor_bootstrap__.app;
+app.use(function(req, res, next) {
     "use strict";
 		var out, urlStart, pages, urls;
 
