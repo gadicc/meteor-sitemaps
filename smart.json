@@ -6,6 +6,6 @@
     "version": "0.0.10",
     "git": "https://github.com/gadicohen/meteor-sitemaps.git",
     "packages": {
-        "robots-txt": "0.0.5"
+        "robots-txt": "0.0.8"
     }
 }
