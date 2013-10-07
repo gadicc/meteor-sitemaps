@@ -29,8 +29,7 @@ app.use(function(req, res, next) {
     if (!_.contains(urls, req.url))
       return next();
 
-    urlStart = (req.headers['x-forwarded-proto']
-      ? req.headers['x-forwarded-proto'] : req.protocol)
+    urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http')
       + '://' + req.headers.host + '/';
 
 		pages = sitemaps.list[req.url];
