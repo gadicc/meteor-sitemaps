@@ -15,7 +15,13 @@ sitemaps.add('/sitemap.xml', function() {
   return [
     { page: 'x', lastmod: new Date().getTime() },
     { page: 'y', lastmod: new Date().getTime(), changefreq: 'monthly' },
-    { page: 'z', lastmod: new Date().getTime(), changefreq: 'monthly', priority: 0.8 }
+    { page: 'z', lastmod: new Date().getTime(), changefreq: 'monthly', priority: 0.8 },
+      { page: 'lang/english', xhtmlLinks: [
+      	{ rel: 'alternate', hreflang: 'de', href: 'lang/deutsch' },
+      	{ rel: 'alternate', hreflang: 'de-ch', href: 'lang/schweiz-deutsch' },
+      	{ rel: 'alternate', hreflang: 'en', href: 'lang/english' }
+      ]}
+
   ];
 });
 ```
@@ -59,6 +65,12 @@ information in a Collection).
 		changefreq: 'monthly',
 		// Optional.  http://www.sitemaps.org/protocol.html#prioritydef
 		priority: 0.8
+		// Optional.  https://support.google.com/webmasters/answer/2620865
+		// Again, the base URL is automatically prepended to the href key
+		xHtmlLinks: [
+			{ ref: 'alternate', 'hreflang': 'en', 'href': 'en/blah' },
+			{ ref: 'alternate', 'hreflang': 'de', 'href': 'de/blah' }
+		]
 	}
 ]
 ```

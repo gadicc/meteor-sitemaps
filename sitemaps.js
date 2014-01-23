@@ -39,28 +39,45 @@ app.use(function(req, res, next) {
       throw new TypeError("sitemaps.add() expects an array or function");
 
 		out = '<?xml version="1.0" encoding="UTF-8"?>\n\n'
-			+ '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n\n';
+			+ '<urlset \n'
+      + 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+      + 'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n\n';
 
+    var w3cDateTimeTS, date;
 		_.each(pages, function(page) {
-			var w3cDateTimeTS, d = new Date(page.lastmod);
-			w3cDateTimeTS = d.getUTCFullYear() + '-'
-				+ (d.getUTCMonth()+1).lpad(2) + '-'
-				+ d.getUTCDate().lpad(2) + 'T'
-				+ d.getUTCHours().lpad(2) + ':'
-				+ d.getUTCMinutes().lpad(2) + ':'
-				+ d.getUTCSeconds().lpad(2) + '+00:00';
 
 			out += '   <url>\n'
         + '      <loc>' + urlStart + escape(page.page) + '</loc>\n';
 
-      if (page.lastmod)
+      if (page.lastmod) {
+        date = new Date(page.lastmod);
+        w3cDateTimeTS = date.getUTCFullYear() + '-'
+          + (date.getUTCMonth()+1).lpad(2) + '-'
+          + date.getUTCDate().lpad(2) + 'T'
+          + date.getUTCHours().lpad(2) + ':'
+          + date.getUTCMinutes().lpad(2) + ':'
+          + date.getUTCSeconds().lpad(2) + '+00:00';
 				out += '      <lastmod>' + w3cDateTimeTS + '</lastmod>\n';
+      }
 
       if (page.changefreq)
         out += '      <changefreq>' + page.changefreq + '</changefreq>\n';
 
       if (page.priority)
         out += '      <priority>' + page.priority + '</priority>\n';
+
+      if (page.xhtmlLinks) {
+        if (!_.isArray(page.xhtmlLinks))
+          page.xhtmlLinks = [page.xhtmlLinks];
+        _.each(page.xhtmlLinks, function(link) {
+          out += '      <xhtml:link \n';
+          if (link.href)
+            link.href = urlStart + escape(link.href);
+          for (var key in link)
+            out += '        ' + key + '="' + link[key] + '"\n';
+          out += '        />\n';
+        });
+      }
 
 			out	+= '   </url>\n\n';
 		});

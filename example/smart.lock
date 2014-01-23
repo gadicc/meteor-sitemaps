@@ -1,0 +1,20 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "sitemaps": {
+        "path": ".."
+      }
+    },
+    "packages": {
+      "sitemaps": {
+        "path": ".."
+      },
+      "robots-txt": {
+        "git": "https://github.com/gadicohen/meteor-robots.txt.git",
+        "tag": "v0.0.8",
+        "commit": "dc1be195b8c0cf7d6263235484218911e1bf27d9"
+      }
+    }
+  }
+}
