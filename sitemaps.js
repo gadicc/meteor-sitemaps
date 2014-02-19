@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
       return next();
 
     urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http')
-      + '://' + req.headers.host + '/';
+      + '://' + req.headers.host;
 
 		pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
@@ -91,8 +91,16 @@ app.use(function(req, res, next) {
 
 sitemaps.add = function(url, func) {
   "use strict";
+  
+  var root = process.env.ROOT_URL;
+
+  // don't double slash urls
+  check(url, String);
+  if (process.env.ROOT_URL.slice(-1) == '/' && url[0] == '/')
+    root = root.slice(0, -1);
+
   sitemaps.list[url] = func;
-  robots.addLine('Sitemap: ' + process.env.ROOT_URL + url);
+  robots.addLine('Sitemap: ' + root + url);
 };
 
 /*
