@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
       return next();
 
     urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http')
-      + '://' + req.headers.host;
+      + '://' + req.headers.host + '/';
 
 		pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
