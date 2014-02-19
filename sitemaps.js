@@ -91,6 +91,12 @@ app.use(function(req, res, next) {
 
 sitemaps.add = function(url, func) {
   "use strict";
+
+  // don't double slash urls
+  check(url, String);
+  if (process.env.ROOT_URL.slice(-1) == '/' && url[0] == '/')
+    url = url.slice(1);
+
   sitemaps.list[url] = func;
   robots.addLine('Sitemap: ' + process.env.ROOT_URL + url);
 };
