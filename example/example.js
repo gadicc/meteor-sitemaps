@@ -1,7 +1,7 @@
 if (Meteor.isServer) {
   sitemaps.add('/sitemap.xml', function() {
     // 'page' is reqired
-    // 'lastmod', 'changefreq', 'priority' are optional.
+    // 'lastmod', 'changefreq', 'priority', 'xhtmlLinks' are optional.
     return [
       { page: 'x', lastmod: new Date().getTime() },
       { page: 'y', lastmod: new Date().getTime(), changefreq: 'monthly' },
