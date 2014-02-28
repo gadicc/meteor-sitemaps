@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
       return next();
 
     urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http')
-      + '://' + req.headers.host;
+      + '://' + req.headers.host + '/';
 
 		pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
 		_.each(pages, function(page) {
 
 			out += '   <url>\n'
-        + '      <loc>' + urlStart + escape(page.page) + '</loc>\n';
+        + '      <loc>' + urlStart + escape(page.page.replace(/^\//,'')) + '</loc>\n';
 
       if (page.lastmod) {
         date = new Date(page.lastmod);
@@ -72,7 +72,7 @@ app.use(function(req, res, next) {
         _.each(page.xhtmlLinks, function(link) {
           out += '      <xhtml:link \n';
           if (link.href)
-            link.href = urlStart + escape(link.href);
+            link.href = urlStart + escape(link.href.replace(/^\//,''));
           for (var key in link)
             out += '        ' + key + '="' + link[key] + '"\n';
           out += '        />\n';
