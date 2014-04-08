@@ -19,9 +19,9 @@ if (typeof Number.lpad === "undefined") {
  */
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
-var app = typeof WebApp != 'undefined'
-        ? WebApp.connectHandlers : __meteor_bootstrap__.app;
-app.use(function(req, res, next) {
+var Fiber = Npm.require('fibers');
+WebApp.connectHandlers.use(function(req, res, next) {
+  new Fiber(function() {
     "use strict";
 		var out, urlStart, pages, urls;
 
@@ -87,6 +87,7 @@ app.use(function(req, res, next) {
 		res.writeHead(200, {'Content-Type': 'application/xml'});
 		res.end(out, 'utf8');
     return;
+  }).run();
 });
 
 sitemaps.add = function(url, func) {

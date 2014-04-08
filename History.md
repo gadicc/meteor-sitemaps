@@ -1,5 +1,12 @@
 ## vNEXT
 
+## v0.0.16
+
+* Fix documentation to not require `.getTime()` on `new Date()`
+* Run user code in a Fiber so Collection calls work (#)
+* Removed < 0.6.5 support :)
+* What happened in 0.0.15? :)
+
 ## v0.0.14
 
 * Fix for double slash issue #3
