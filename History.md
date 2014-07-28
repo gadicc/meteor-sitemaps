@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.17
+
+* Multiple protocols reported by reverse proxy (closes #10, thanks tarangp!)
+
 ## v0.0.16
 
 * Fix documentation to not require `.getTime()` on `new Date()`
