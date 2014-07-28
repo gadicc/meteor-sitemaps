@@ -28,8 +28,8 @@ WebApp.connectHandlers.use(function(req, res, next) {
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
       return next();
-
-    urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http')
+  
+    urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http').split(",")[0]
       + '://' + req.headers.host + '/';
 
 		pages = sitemaps.list[req.url];
