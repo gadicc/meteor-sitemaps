@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v0.0.18
+
+* Typos, spacing, quote, etc... thanks @dandv (#12)
+* Upload to Meteor 0.9.x package server, thanks @tarang (#11, #14)
+
 ## v0.0.17
 
 * Multiple protocols reported by reverse proxy (closes #10, thanks tarangp!)
