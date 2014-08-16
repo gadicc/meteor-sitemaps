@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Whitespace per Meteor standards, thanks @dandv (#15, #16)
+
 ## v0.0.18
 
 * Typos, spacing, quote, etc... thanks @dandv (#12)
