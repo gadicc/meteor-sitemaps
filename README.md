@@ -3,7 +3,7 @@
 ### Quick Start
 
 ```bash
-mrt add sitemaps
+meteor add gadicohen:sitemaps
 ```
 
 1. Create <code>server/sitemaps.js</code> which contains something like:
