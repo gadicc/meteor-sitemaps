@@ -23,15 +23,13 @@ var Fiber = Npm.require('fibers');
 WebApp.connectHandlers.use(function(req, res, next) {
   new Fiber(function() {
     "use strict";
-    var out, urlStart, pages, urls;
+    var out, pages, urls;
+    var urlStart = Meteor.absoluteUrl();
 
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
       return next();
   
-    urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http').split(",")[0]
-      + '://' + req.headers.host + '/';
-
     pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
       pages = pages();

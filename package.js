@@ -1,6 +1,6 @@
 Package.describe({
   summary: "functions to easily output valid sitemaps",
-  version: "0.0.18"
+  version: "0.0.19"
 });
 
 Package.on_use(function (api) {

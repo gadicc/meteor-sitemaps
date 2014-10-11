@@ -1,6 +1,9 @@
 ## vNEXT
 
+## v0.0.19
+
 * Whitespace per Meteor standards, thanks @dandv (#15, #16)
+* Use Meteor.absoluteUrl() to generate URLs (#17).
 
 ## v0.0.18
 
