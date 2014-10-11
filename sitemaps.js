@@ -28,9 +28,14 @@ WebApp.connectHandlers.use(function(req, res, next) {
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
       return next();
-  
-    urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http').split(",")[0]
-      + '://' + req.headers.host + '/';
+
+    if(process.env.ROOT_URL){
+        urlStart = process.env.ROOT_URL.substr(-1) === '/' ?
+            process.env.ROOT_URL:(process.env.ROOT_URL+'/');
+    }else{
+        urlStart = (req.headers['x-forwarded-proto'] || req.protocol || 'http').split(",")[0]
+        + '://' + req.headers.host + '/';
+    }
 
     pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
