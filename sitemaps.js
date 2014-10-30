@@ -79,6 +79,27 @@ WebApp.connectHandlers.use(function(req, res, next) {
         });
       }
 
+      if (page.imageLinks) {
+
+        if (!_.isArray(page.imageLinks))
+          page.imageLinks = [page.imageLinks];
+
+        _.each(page.imageLinks, function(image) {
+
+          out += '      <image:image> \n';
+
+          if (image.href)
+            image.href = urlStart + escape(image.href.replace(/^\//,''));
+
+          for (var key in image)
+            out += '      <image:' + key + '>' + urlStart + escape(image[key].replace(/^\//,'')) + '</image:' + key + '>\n';
+
+          out += '      </image:image> \n';
+
+        });
+      }
+
+
       out  += '   </url>\n\n';
     });
 
