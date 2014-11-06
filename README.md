@@ -1,5 +1,10 @@
 ## Create valid sitemaps using your own functions
 
+### Credit
+
+This is a fork from https://github.com/gadicohen/meteor-sitemaps that adds images to the sitemap
+
+
 ### Quick Start
 
 ```bash

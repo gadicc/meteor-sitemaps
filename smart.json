@@ -1,10 +1,10 @@
 {
   "name": "sitemaps",
   "description": "functions to easily output valid sitemaps",
-  "homepage": "https://github.com/gadicohen/meteor-sitemaps",
+  "homepage": "https://github.com/dirkstevens/meteor-sitemaps",
   "author": "Gadi Cohen <dragon@wastelands.net>",
   "version": "0.0.18",
-  "git": "https://github.com/gadicohen/meteor-sitemaps.git",
+  "git": "https://github.com/dirkstevens/meteor-sitemaps.git",
   "packages": {
     "robots-txt": "0.0.8"
   }
