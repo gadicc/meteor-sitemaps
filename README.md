@@ -99,7 +99,7 @@ information in a Collection).
         caption: "..", geo_location: "..", title: "..", license: ".."}
     ],
     // Optional.  https://support.google.com/webmasters/answer/80472?hl=en
-    // Again, the base URL is automatically prepended to *loc
+    // Again, the base URL is automatically prepended to loc, *_loc
     videos: [
       { loc: '/myVideo.jpg' },    // Only loc is required
       { loc: '/myOtherVideo.jpg'  // Below properties are optional
