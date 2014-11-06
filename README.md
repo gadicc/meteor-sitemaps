@@ -6,29 +6,49 @@
 meteor add gadicohen:sitemaps
 ```
 
-1. Create <code>server/sitemaps.js</code> which contains something like:
+1. Create `server/sitemaps.js` which contains something like:
 
 ```js
 sitemaps.add('/sitemap.xml', function() {
-  // 'page' is required
-  // 'lastmod', 'changefreq', 'priority' are optional
+  // required: page
+  // optional: lastmod, changefreq, priority, xhtmlLinks, images, videos
   return [
-    { page: 'x', lastmod: new Date() },
-    { page: 'y', lastmod: new Date(), changefreq: 'monthly' },
-    { page: 'z', lastmod: new Date().getTime(), changefreq: 'monthly', priority: 0.8 },
+    { page: '/x', lastmod: new Date() },
+    { page: '/y', lastmod: new Date(), changefreq: 'monthly' },
+    { page: '/z', lastmod: new Date().getTime(), changefreq: 'monthly', priority: 0.8 },
+    // https://support.google.com/webmasters/answer/178636?hl=en
+    { page: '/pageWithViedeoAndImages',
+      images: [
+        { loc: '/myImg.jpg', },        // Only loc is required
+        { loc: '/myOtherImg.jpg',      // Below properties are optional
+          caption: "..", geo_location: "..", title: "..", license: ".."}
+      ],
+      videos: [
+        { loc: '/myVideo.jpg', },      // Only loc is required
+        { loc: '/myOtherVideo.jpg',    // Below properties are optional
+          thumbnail_loc: "..", title: "..", description: ".." etc }
+      ]
+    },
+    // https://support.google.com/webmasters/answer/2620865?hl=en
     { page: 'lang/english', xhtmlLinks: [
-      { rel: 'alternate', hreflang: 'de', href: 'lang/deutsch' },
-      { rel: 'alternate', hreflang: 'de-ch', href: 'lang/schweiz-deutsch' },
-      { rel: 'alternate', hreflang: 'en', href: 'lang/english' }
+      { rel: 'alternate', hreflang: 'de', href: '/lang/deutsch' },
+      { rel: 'alternate', hreflang: 'de-ch', href: '/lang/schweiz-deutsch' },
+      { rel: 'alternate', hreflang: 'en', href: '/lang/english' }
     ]}
-
   ];
 });
 ```
 
-You can call <code>sitemaps.add()</code> as many times as you like.  More details on the format below.
-Note that the <code>url</code> is automatically added to the data served from
-<code>/robots.txt</code> (since 0.0.4, using the robots.txt smart package).
+You can call `sitemaps.add()` as many times as you like.
+More details on the format below.
+Note that the `url` is automatically added to the data served from
+`/robots.txt` (since 0.0.4, using the robots.txt smart package).
+
+**Important**: The above example uses a brand new Date() for every link.  *This
+is just for demonstration purposes*.  Of course you should use the real date
+of the last page update (`updatedAt` from the database?).  If you always use
+the current time, Google will penalize you (or at the very least, ignore this
+field on future crawls).
 
 ### Full Usage
 
@@ -38,7 +58,7 @@ sitemaps.add(url, list);
 
 #### URL
 
-The obvious example is <code>/sitemap.xml</code>.  You can call the function
+The obvious example is `/sitemap.xml`.  You can call the function
 more than once to have many different (types of) sitemaps.  The URL is added
 to the output of /robots.txt automatically (since 0.0.4).
 
@@ -70,6 +90,20 @@ information in a Collection).
     xHtmlLinks: [
       { ref: 'alternate', 'hreflang': 'en', 'href': 'en/blah' },
       { ref: 'alternate', 'hreflang': 'de', 'href': 'de/blah' }
+    ],
+    // Optional.  https://support.google.com/webmasters/answer/2620865?hl=en
+    // Again, the base URL is automatically prepended to the loc key
+    images: [
+      { loc: '/myImg.jpg' },      // Only loc is required
+      { loc: '/myOtherImg.jpg',   // Below properties are optional
+        caption: "..", geo_location: "..", title: "..", license: ".."}
+    ],
+    // Optional.  https://support.google.com/webmasters/answer/80472?hl=en
+    // Again, the base URL is automatically prepended to *loc
+    videos: [
+      { loc: '/myVideo.jpg' },    // Only loc is required
+      { loc: '/myOtherVideo.jpg'  // Below properties are optional
+        thumbnail_loc: "..", title: "..", description: "..", etc: ".." }
     ]
   }
 ]
@@ -94,3 +128,8 @@ sitemaps.add('/mw_AllPages_sitemap.xml', function() {
 ```
 
 You can see this output here: http://www.meteorpedia.com/mw_AllPages_sitemap.xml
+
+## Contributors
+
+Thanks to @zol, @tarang, @dandv, @DirkStevens, for various PRs as listed
+in [History.md](History.md).

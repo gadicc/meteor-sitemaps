@@ -1,3 +1,8 @@
+/*
+ * http://en.wikipedia.org/wiki/Site_map
+ * http://www.sitemaps.org/index.html
+ */
+
 sitemaps = {
   list: {}
 };
@@ -13,10 +18,10 @@ if (typeof Number.lpad === "undefined") {
   };
 }
 
-/*
- * http://en.wikipedia.org/wiki/Site_map
- * http://www.sitemaps.org/index.html
- */
+var urlStart = Meteor.absoluteUrl();
+function prepareUrl(url) {
+  return urlStart + escape(url.replace(/^\//, ''));
+}
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
 var Fiber = Npm.require('fibers');
@@ -24,7 +29,6 @@ WebApp.connectHandlers.use(function(req, res, next) {
   new Fiber(function() {
     "use strict";
     var out, pages, urls;
-    var urlStart = Meteor.absoluteUrl();
 
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
@@ -36,16 +40,15 @@ WebApp.connectHandlers.use(function(req, res, next) {
     else if (!_.isArray(pages))
       throw new TypeError("sitemaps.add() expects an array or function");
 
-    out = '<?xml version="1.0" encoding="UTF-8"?>\n\n'
-      + '<urlset \n'
-      + 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
-      + 'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n\n';
+    // The header is added later once we know which namespaces we need
+    out = '';
+    var namespaces = {};
 
     var w3cDateTimeTS, date;
     _.each(pages, function(page) {
 
-      out += '   <url>\n'
-        + '      <loc>' + urlStart + escape(page.page.replace(/^\//,'')) + '</loc>\n';
+      out += '  <url>\n'
+        + '    <loc>' + prepareUrl(page.page) + '</loc>\n';
 
       if (page.lastmod) {
         date = new Date(page.lastmod);
@@ -55,32 +58,68 @@ WebApp.connectHandlers.use(function(req, res, next) {
           + date.getUTCHours().lpad(2) + ':'
           + date.getUTCMinutes().lpad(2) + ':'
           + date.getUTCSeconds().lpad(2) + '+00:00';
-        out += '      <lastmod>' + w3cDateTimeTS + '</lastmod>\n';
+        out += '    <lastmod>' + w3cDateTimeTS + '</lastmod>\n';
       }
 
       if (page.changefreq)
-        out += '      <changefreq>' + page.changefreq + '</changefreq>\n';
+        out += '    <changefreq>' + page.changefreq + '</changefreq>\n';
 
       if (page.priority)
-        out += '      <priority>' + page.priority + '</priority>\n';
+        out += '    <priority>' + page.priority + '</priority>\n';
 
       if (page.xhtmlLinks) {
+        namespaces.xhtml = true;
         if (!_.isArray(page.xhtmlLinks))
           page.xhtmlLinks = [page.xhtmlLinks];
         _.each(page.xhtmlLinks, function(link) {
-          out += '      <xhtml:link \n';
+          out += '    <xhtml:link \n';
           if (link.href)
-            link.href = urlStart + escape(link.href.replace(/^\//,''));
+            link.href = prepareUrl(link.href);
           for (var key in link)
-            out += '        ' + key + '="' + link[key] + '"\n';
-          out += '        />\n';
+            out += '      ' + key + '="' + link[key] + '"\n';
+          out += '      />\n';
         });
       }
+
+      _.each(['image', 'video'], function(tag) {
+        var tagS = tag+'s';
+        if (page[tagS]) {
+          namespaces[tag] = true;
+          if (!_.isArray(page[tagS]))
+            page[tagS] = [page[tagS]];
+
+          _.each(page[tagS], function(data) {
+            out += '      <'+tag+':'+tag+'> \n';
+
+            for (var key in data) {
+              if (key == 'loc' || key.match(/_loc$/))
+                data[key] = prepareUrl(data[key]);
+              out += '        <'+tag+':'+key+'>' + data[key] + '</'+tag+':'+key+'>\n';
+            }
+
+            out += '      </'+tag+':'+tag+'> \n';
+          });
+        }
+      });
 
       out  += '   </url>\n\n';
     });
 
     out += '</urlset>\n';
+
+    // We do this last so we know which namesapces to add
+    var header = '<?xml version="1.0" encoding="UTF-8"?>\n'
+      + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
+
+    if (namespaces.xhtml)
+      header += '\n  xmlns:xhtml="http://www.w3.org/1999/xhtml"';
+    if (namespaces.image)
+      header += '\n  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"';
+    if (namespaces.video)
+      header += '\n  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"';
+    header += '>\n';
+
+    out = header + out;
 
     res.writeHead(200, {'Content-Type': 'application/xml'});
     res.end(out, 'utf8');
@@ -89,17 +128,11 @@ WebApp.connectHandlers.use(function(req, res, next) {
 });
 
 sitemaps.add = function(url, func) {
-  "use strict";
-  
-  var root = process.env.ROOT_URL;
-
-  // don't double slash urls
+  "use strict";  
   check(url, String);
-  if (process.env.ROOT_URL.slice(-1) == '/' && url[0] == '/')
-    root = root.slice(0, -1);
 
   sitemaps.list[url] = func;
-  robots.addLine('Sitemap: ' + root + url);
+  robots.addLine('Sitemap: ' + prepareUrl(url));
 };
 
 /*
