@@ -20,7 +20,8 @@ if (typeof Number.lpad === "undefined") {
 
 var urlStart = Meteor.absoluteUrl();
 function prepareUrl(url) {
-  return urlStart + encodeURI(url.replace(/^\//, ''));
+    var urlStart = sitemaps.ROOT_URL || Meteor.absoluteUrl();
+    return urlStart + encodeURI(url.replace(/^\//, ''));
 }
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
