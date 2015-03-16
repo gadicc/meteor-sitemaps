@@ -20,7 +20,7 @@ if (typeof Number.lpad === "undefined") {
 
 var urlStart = Meteor.absoluteUrl();
 function prepareUrl(url) {
-  return urlStart + escape(url.replace(/^\//, ''));
+  return urlStart + encodeURI(url.replace(/^\//, ''));
 }
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
@@ -33,7 +33,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
     urls = _.keys(sitemaps.list);
     if (!_.contains(urls, req.url))
       return next();
-  
+
     pages = sitemaps.list[req.url];
     if (_.isFunction(pages))
       pages = pages();
@@ -128,7 +128,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
 });
 
 sitemaps.add = function(url, func) {
-  "use strict";  
+  "use strict";
   check(url, String);
 
   sitemaps.list[url] = func;
