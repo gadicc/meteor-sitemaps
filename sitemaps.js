@@ -4,7 +4,7 @@
  */
 
 sitemaps = {
-  list: {}
+  _list: {}
 };
 
 if (typeof Number.lpad === "undefined") {
@@ -31,11 +31,11 @@ WebApp.connectHandlers.use(function(req, res, next) {
     "use strict";
     var out, pages, urls;
 
-    urls = _.keys(sitemaps.list);
+    urls = _.keys(sitemaps._list);
     if (!_.contains(urls, req.url))
       return next();
 
-    pages = sitemaps.list[req.url];
+    pages = sitemaps._list[req.url];
     if (_.isFunction(pages))
       pages = pages();
     else if (!_.isArray(pages))
@@ -132,7 +132,7 @@ sitemaps.add = function(url, func) {
   "use strict";
   check(url, String);
 
-  sitemaps.list[url] = func;
+  sitemaps._list[url] = func;
   robots.addLine('Sitemap: ' + prepareUrl(url));
 };
 
