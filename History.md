@@ -1,5 +1,16 @@
 ## vNEXT
 
+## v0.0.21
+
+* Use encodeURI() enstead of escape() - thanks @picsoung (#24)
+* Allow custom ROOT_URLs - thanks @picsoung (#25)
+* New sitemaps.config(key, value) and sitemaps.config({key1: value1, etc})
+* New sitemaps.config('rootUrl', myRootUrl) to configure ROOT_URL (#26)
+* Don't prepend ROOT_URL on absolute URLS (#27)
+* Bump robots-txt from 0.0.8 to 0.0.9
+* Add dependency on check package - thanks @SashaG (#28)
+* Finally added a comprehensive test suite :)
+
 ## v0.0.20
 
 * Support for images, thanks @DirkStevens (#22)

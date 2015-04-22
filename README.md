@@ -1,6 +1,6 @@
 # meteor-sitemaps [![Build Status](https://api.travis-ci.org/gadicc/meteor-sitemaps.svg)](https://travis-ci.org/gadicc/meteor-sitemaps)
 
-## Create valid sitemaps using your own functions
+Quickly create valid sitemaps using your own functions.
 
 ### Quick Start
 
