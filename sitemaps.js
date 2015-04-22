@@ -4,7 +4,26 @@
  */
 
 sitemaps = {
-  _list: {}
+  _list: {},
+  _config: {
+    rootUrl: undefined
+  },
+  _configHooks: {}
+};
+
+function configSet(key, value) {
+  if (sitemaps._configHooks[key])
+    sitemaps._configHooks[key](key, value, sitemaps._config[key]);
+  sitemaps._config[key] = value;
+}
+
+sitemaps.config = function(key, value) {
+  if (!value && _.isObject(key)) {
+    for (k in key)
+      configSet(k, key[k]);
+  } else {
+    configSet(key, value);
+  }
 };
 
 if (typeof Number.lpad === "undefined") {
@@ -19,10 +38,18 @@ if (typeof Number.lpad === "undefined") {
 }
 
 var urlStart = Meteor.absoluteUrl();
-function prepareUrl(url) {
-    var urlStart = sitemaps.ROOT_URL || Meteor.absoluteUrl();
+
+sitemaps._configHooks.rootUrl = function(key, value) {
+  urlStart = value || Meteor.absoluteUrl();
+};
+
+var prepareUrl = sitemaps._prepareUrl = function(url) {
+  if (url.match(/^https?:\/\//))
+    return url;
+  else {
     return urlStart + encodeURI(url.replace(/^\//, ''));
-}
+  }
+};
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
 var Fiber = Npm.require('fibers');
