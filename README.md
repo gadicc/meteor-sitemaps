@@ -1,3 +1,5 @@
+# meteor-sitemaps [![Build Status](https://api.travis-ci.org/gadicc/meteor-sitemaps.svg)](https://travis-ci.org/gadicc/meteor-sitemaps)
+
 ## Create valid sitemaps using your own functions
 
 ### Quick Start
@@ -62,7 +64,8 @@ The obvious example is `/sitemap.xml`.  You can call the function
 more than once to have many different (types of) sitemaps.  The URL is added
 to the output of /robots.txt automatically (since 0.0.4).
 
-Note that the location is [important](http://www.sitemaps.org/protocol.html#location).  A sitemap can only
+Note that the location is
+[important](http://www.sitemaps.org/protocol.html#location).  A sitemap can only
 reference other URLs in its own path or descendant paths.  e.g. `/sitemap.xml`
 can reference all URLs on the site.  `/articles/sitemap.xml` can only reference
 other pages in the `/articles/` directory/path/route.
@@ -129,7 +132,15 @@ sitemaps.add('/mw_AllPages_sitemap.xml', function() {
 
 You can see this output here: http://www.meteorpedia.com/mw_AllPages_sitemap.xml
 
+#### Locations (page, loc, href, etc)
+
+Anywhere where a url can be provided, you can provide a "relative URL" (with
+or without a leading /), and Meteor.absoluteUrl() will be prepended.  You
+can override this by calling `sitemaps.config('rootUrl', 'myRootUrl')`.  For
+individual links, providing an absoluet URL (beginning with `http://` or
+`https://`) will avoid this behaviour.  URI components are escaped for you.
+
 ## Contributors
 
-Thanks to @zol, @tarang, @dandv, @DirkStevens, for various PRs as listed
-in [History.md](History.md).
+Thanks to @zol, @tarang, @dandv, @DirkStevens, @picsoung, @SashaG for various
+PRs as listed in [History.md](History.md).
