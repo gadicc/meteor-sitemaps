@@ -131,6 +131,8 @@ WebApp.connectHandlers.use(function(req, res, next) {
 sitemaps.add = function(url, func) {
   "use strict";
   check(url, String);
+  if (url.charAt(0) !== '/')
+    url = '/' + url;
 
   sitemaps._list[url] = func;
   robots.addLine('Sitemap: ' + prepareUrl(url));
