@@ -41,6 +41,11 @@ Tinytest.add('sitemaps - urls - uri escaped', function(test) {
     Meteor.absoluteUrl() + 'space%20space.html');
 });
 
+Tinytest.add('sitemaps - urls - & must be escaped', function(test) {
+  test.equal(sitemaps._prepareUrl('?arg1=val1&arg2=val2&arg3=val3'),
+    Meteor.absoluteUrl() + '?arg1=val1&amp;arg2=val2&amp;arg3=val3');
+});
+
 Tinytest.add('sitemaps - urls - custom root', function(test) {
   var rootUrl = 'http://custom.com/';
   sitemaps.config('rootUrl', rootUrl);

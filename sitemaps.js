@@ -47,7 +47,7 @@ var prepareUrl = sitemaps._prepareUrl = function(url) {
   if (url.match(/^https?:\/\//))
     return url;
   else {
-    return urlStart + encodeURI(url.replace(/^\//, ''));
+    return urlStart + encodeURI(url.replace(/^\//, '')).replace(/&/g, '&amp;');
   }
 };
 
