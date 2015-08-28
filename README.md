@@ -2,6 +2,8 @@
 
 Quickly create valid sitemaps using your own functions.
 
+Copyright (c) 2013 by Gadi Cohen <dragon@wastelands.net> and released under the MIT license (see LICENSE.txt).
+
 ### Quick Start
 
 ```bash
