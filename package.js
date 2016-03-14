@@ -1,13 +1,13 @@
 Package.describe({
 	name: "gadicohen:sitemaps",
   summary: "functions to easily output valid sitemaps",
-  version: "0.0.23",
+  version: "0.0.24",
   git: 'https://github.com/gadicc/meteor-sitemaps.git'
 });
 
 Package.onUse(function(api) {
 	api.versionsFrom("METEOR@0.9.0");
-  api.use(['meteor', 'webapp', 'check'], 'server');
+  api.use(['meteor', 'webapp', 'check', 'underscore'], 'server');
 
   api.use('gadicohen:robots-txt@0.0.9', 'server');
 

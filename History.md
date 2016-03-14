@@ -1,5 +1,14 @@
 ## vNEXT
 
+## v0.0.24 (2016-03-14)
+
+* api.use('underscore') to work in Meteor 1.2+ and avoid conflicts with
+  globally installed lodash (if it exists).
+
+## v0.0.23 (2015-08-28)
+
+* Release under MIT license.
+
 ## v0.0.22 (2015-Jul-10)
 
 * Escape & in loc tag (must be &amp; in XML) - fixes #29
