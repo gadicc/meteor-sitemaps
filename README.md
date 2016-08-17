@@ -1,10 +1,12 @@
 # meteor-sitemaps [![Build Status](https://api.travis-ci.org/gadicc/meteor-sitemaps.svg)](https://travis-ci.org/gadicc/meteor-sitemaps)
 
-Quickly create valid sitemaps using your own functions.
+*Quickly create dynamic ("real-time") sitemaps using your own functions.*
 
 Copyright (c) 2013 by Gadi Cohen <dragon@wastelands.net> and released under the MIT license (see LICENSE.txt).
 
 ### Quick Start
+
+A simple example is shown below, with more complicated examples further down.  Sitemaps are dynamic (generated "on-the-fly" at request time), intended for moderate use with the latest data from your database.  If you have more than a few hundred pages and/or are crawled at high frequency, you may be better off creating a static sitemap.
 
 ```bash
 meteor add gadicohen:sitemaps
