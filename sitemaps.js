@@ -64,7 +64,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
     pages = sitemaps._list[req.url];
     if (_.isFunction(pages))
-      pages = pages();
+      pages = pages(req);
     else if (!_.isArray(pages))
       throw new TypeError("sitemaps.add() expects an array or function");
 

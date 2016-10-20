@@ -1,12 +1,13 @@
 if (Meteor.isServer) {
   var Pages = new Meteor.Collection('pages');
+
   if (Pages.find().count() == 0) {
     Pages.insert({ page: 'x', lastmod: new Date().getTime() });
     Pages.insert({ page: '/y', lastmod: new Date().getTime(), changefreq: 'monthly' });
     Pages.insert({ page: 'z', lastmod: new Date(), changefreq: 'monthly', priority: 0.8 });
   }
 
-  // From README  
+  // From README
   sitemaps.add('/sitemap.xml', function() {
     // required: page
     // optional: lastmod, changefreq, priority, xhtmlLinks, images, videos
@@ -36,7 +37,34 @@ if (Meteor.isServer) {
     ];
   });
 
-  sitemaps.add('/sitemapDB.xml', function() {
+  var getFullLink = function(req) {
+    if (!req) {
+      return '';
+    }
+
+    var headers = req.headers;
+
+    var host = headers && headers.host;
+
+    var protocol = headers && headers['x-forwarded-proto'];
+
+    if (protocol && protocol.match((/^https/))) {
+      protocol = 'https://';
+    } else {
+      protocol = 'http://';
+    }
+
+    return protocol + host;
+  };
+
+  sitemaps.add('/sitemapDB.xml', function(req) {
+    // NOTE: to get the exact domain, in case you have a multiple-domain app
+    const fullLink = getFullLink(req);
+
+    out.push({
+      page: fullLink + '/',
+    })
+
     var out = [], pages = Pages.find().fetch();
     _.each(pages, function(page) {
       out.push({
