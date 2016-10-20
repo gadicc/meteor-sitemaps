@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v0.0.25 (2016-10-20)
+
+* Pass `req` object to `.add()` callback, useful for dealing with multi-domain
+  apps.  thanks @nlhuykhang (#47)
+
 ## v0.0.24 (2016-03-14)
 
 * api.use('underscore') to work in Meteor 1.2+ and avoid conflicts with
