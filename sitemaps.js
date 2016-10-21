@@ -6,7 +6,8 @@
 sitemaps = {
   _list: {},
   _config: {
-    rootUrl: undefined
+    rootUrl: undefined,
+    gzip: false,
   },
   _configHooks: {}
 };
@@ -53,6 +54,33 @@ var prepareUrl = sitemaps._prepareUrl = function(url) {
 
 // TODO: 1) gzip, 2) sitemap index + other types + sitemap for old content
 var Fiber = Npm.require('fibers');
+var zlib = Npm.require('zlib');
+var stream = Npm.require('stream');
+
+var resAsXML = function resAsXML(res, data) {
+  res.writeHead(200, {
+    'Content-Type': 'application/xml',
+  });
+
+  res.end(data);
+  return;
+};
+
+var resAsGZip = function resAsGZip(res, data) {
+  // create read stream from text
+  var s = new stream.Readable();
+  s.push(data);
+  s.push(null);
+
+  res.writeHead(200, {
+    'Content-Type': 'application/xml',
+    'Content-Encoding': 'gzip',
+  });
+
+  // pipe to zlib to compress data
+  s.pipe(zlib.createGzip()).pipe(res);
+};
+
 WebApp.connectHandlers.use(function(req, res, next) {
   new Fiber(function() {
     "use strict";
@@ -149,8 +177,13 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
     out = header + out;
 
-    res.writeHead(200, {'Content-Type': 'application/xml'});
-    res.end(out, 'utf8');
+    // response as gzip
+    if (sitemaps._config.gzip) {
+      resAsGZip(res, out);
+      return;
+    }
+
+    resAsXML(res, out);
     return;
   }).run();
 });

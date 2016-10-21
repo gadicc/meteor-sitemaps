@@ -57,13 +57,17 @@ if (Meteor.isServer) {
     return protocol + host;
   };
 
-  sitemaps.add('/sitemapDB.xml', function(req) {
+  sitemaps.config('gzip', true);
+
+  sitemaps.add('/sitemapDB.xml.gz', function(req) {
     // NOTE: to get the exact domain, in case you have a multiple-domain app
-    const fullLink = getFullLink(req);
+    var fullLink = getFullLink(req);
+
+    var out = [];
 
     out.push({
       page: fullLink + '/',
-    })
+    });
 
     var out = [], pages = Pages.find().fetch();
     _.each(pages, function(page) {
