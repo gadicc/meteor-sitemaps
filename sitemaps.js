@@ -59,7 +59,7 @@ var stream = Npm.require('stream');
 
 var resAsXML = function resAsXML(res, data) {
   res.writeHead(200, {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/xml; charset=UTF-8',
   });
 
   res.end(data);
@@ -73,7 +73,7 @@ var resAsGZip = function resAsGZip(res, data) {
   s.push(null);
 
   res.writeHead(200, {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/xml; charset=UTF-8',
     'Content-Encoding': 'gzip',
   });
 
