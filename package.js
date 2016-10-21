@@ -15,7 +15,10 @@ Package.onUse(function(api) {
   api.export('sitemaps', 'server');
 });
 
-Npm.depends({'xml2js': '0.4.8'});
+Npm.depends({
+	'xml2js': '0.4.8',
+	'zlibjs': '0.2.0',
+});
 
 Package.onTest(function(api) {
   api.use(['tinytest', 'http', 'random'], 'server');
