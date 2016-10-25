@@ -12,7 +12,7 @@ deps@1.0.7
 ejson@1.0.6
 fastclick@1.0.3
 gadicohen:robots-txt@0.0.9
-gadicohen:sitemaps@0.0.24
+gadicohen:sitemaps@0.0.25
 geojson-utils@1.0.3
 html-tools@1.0.4
 htmljs@1.0.4

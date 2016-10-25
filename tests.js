@@ -1,4 +1,6 @@
 var parseString = Meteor.wrapAsync(Npm.require('xml2js').parseString);
+var zlib = Npm.require('zlib');
+var http = Npm.require('http');
 
 // Expects a "url" relative to ROOT_URL.
 // Inherently validates XML and throws an error if invalid
@@ -9,9 +11,37 @@ function fetch(url) {
 
 function addAndFetch(data) {
   var url = Random.id();
+  sitemaps.config('gzip', false);
   sitemaps.add(url, data);
   return fetch(url);
 }
+
+function addAndFetchGzip(data, cb) {
+  var route = Meteor.absoluteUrl();
+  var url = Random.id();
+
+  sitemaps.config('gzip', true);
+  sitemaps.add(url, data);
+
+  http.get(route + url, Meteor.bindEnvironment(function(res) {
+    var re = [];
+
+    res.on('data', function(chunk) {
+      re.push(Buffer.from(chunk));
+    });
+
+    res.on('end', Meteor.bindEnvironment(function() {
+      zlib.gunzip(Buffer.concat(re), Meteor.bindEnvironment(function(err, buff) {
+        var xml = parseString(buff.toString());
+
+        cb && cb(xml);
+      }));
+
+    }));
+
+  }));
+}
+
 
 /* urls */
 
@@ -63,6 +93,7 @@ Tinytest.add('sitemaps - urls - used by loc/xhtml/image/video', function(test) {
   var unescapedUrl = ' ';
   var escapedUrl = Meteor.absoluteUrl() + '%20';
 
+  sitemaps.config('gzip', false);
   sitemaps.add(sitemapUrl, [
     {
       page: unescapedUrl,
@@ -84,6 +115,7 @@ Tinytest.add('sitemaps - urls - used by loc/xhtml/image/video', function(test) {
 /* general */
 
 Tinytest.add('sitemaps - README example generates valid sitemap', function(test) {
+  sitemaps.config('gzip', false);
   sitemaps.add('/readme.xml', function() {
     // required: page
     // optional: lastmod, changefreq, priority, xhtmlLinks, images, videos
@@ -117,6 +149,7 @@ Tinytest.add('sitemaps - README example generates valid sitemap', function(test)
 });
 
 Tinytest.add('sitemaps - sitemap+page relative URL with leading /', function(test) {
+  sitemaps.config('gzip', false);
   sitemaps.add('/sitemap1.xml', [ { page: '/page2' } ]);
   var sitemap = fetch('sitemap1.xml'); // throws error if /test1.xml isn't served
   var url = sitemap.urlset.url[0].loc[0];
@@ -124,6 +157,7 @@ Tinytest.add('sitemaps - sitemap+page relative URL with leading /', function(tes
 });
 
 Tinytest.add('sitemaps - sitemap+page relative URL without leading /', function(test) {
+  sitemaps.config('gzip', false);
   sitemaps.add('sitemap2.xml', [ { page: 'page2' } ]);
   var sitemap = fetch('sitemap2.xml'); // throws error if /test1.xml isn't served
   var url = sitemap.urlset.url[0].loc[0];
@@ -157,4 +191,44 @@ Tinytest.add('sitemaps - namespaces - xmlns:video on video', function(test) {
   test.equal(sitemap.urlset.$['xmlns:video'],
     'http://www.google.com/schemas/sitemap-video/1.1');
   test.equal(Object.keys(sitemap.urlset.$).length, 2);
+});
+
+/* gzip-namespaces */
+
+Tinytest.addAsync('sitemaps-gzip - namespaces - xmlns always', function(test, next) {
+  addAndFetchGzip([ { page: 'x' } ], function(xml) {
+    test.equal(xml.urlset.$.xmlns, 'http://www.sitemaps.org/schemas/sitemap/0.9');
+    test.equal(Object.keys(xml.urlset.$).length, 1);
+    next();
+  });
+});
+
+Tinytest.addAsync('sitemaps-gzip - namespaces - xmlns:xhtml on xhtmlLinks', function(test, next) {
+  addAndFetchGzip([{
+    page: 'x',
+    xhtmlLinks: [ { rel: 'alternate', hreflang: 'en', href: 'xen' } ]
+  }], function(xml) {
+    test.equal(xml.urlset.$['xmlns:xhtml'], 'http://www.w3.org/1999/xhtml');
+    test.equal(Object.keys(xml.urlset.$).length, 2);
+    next();
+  });
+});
+
+Tinytest.addAsync('sitemaps-gzip - namespaces - xmlns:image on image', function(test, next) {
+  addAndFetchGzip([ { page: 'x', images: [ { loc: 'ximg' } ] } ], function(xml) {
+    test.equal(xml.urlset.$['xmlns:image'],
+      'http://www.google.com/schemas/sitemap-image/1.1');
+    test.equal(Object.keys(xml.urlset.$).length, 2);
+    next();
+  });
+});
+
+Tinytest.addAsync('sitemaps-gzip - namespaces - xmlns:video on video', function(test, next) {
+  addAndFetchGzip([ { page: 'x', videos: [ { loc: 'xvid' } ] } ], function(xml) {
+    test.equal(xml.urlset.$['xmlns:video'],
+      'http://www.google.com/schemas/sitemap-video/1.1');
+
+    test.equal(Object.keys(xml.urlset.$).length, 2);
+    next();
+  });
 });

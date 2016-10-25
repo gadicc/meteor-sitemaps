@@ -59,7 +59,11 @@ field on future crawls).
 ### Full Usage
 
 ```js
+// To add a sitemap
 sitemaps.add(url, list);
+
+// To compress sitemap as gzip files. Note this will apply to all sitemap files
+sitemaps.config('gzip', true/false); // default to false
 ```
 
 #### URL
@@ -122,9 +126,13 @@ to build the sitemap.
 #### Example (from Meteorpedia)
 
 ```js
-sitemaps.add('/mw_AllPages_sitemap.xml', function(req) {
+// To compress all sitemap as gzip file
+sitemaps.config('gzip', true);
+
+sitemaps.add('/mw_AllPages_sitemap.xml.gz', function(req) {
   // NOTE: req is the Node request object, use it when you need to retrieve information (host, port, protocol ...)
   // check out more in ./example/example.js
+
   var out = [], pages = WikiPages.find().fetch();
   _.each(pages, function(page) {
     out.push({
