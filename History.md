@@ -1,5 +1,14 @@
 ## vNEXT
 
+## v0.0.26 (2016-10-25)
+
+* GZIP compression support.  Big thanks to @nlhuykhang, this has been on the
+  TODO list for a long time.  See the README for instructions and examples,
+  but in short, `sitemaps.config('gzip', true)`.  This will probably be the
+  default in the future.  (#48, #43)
+
+* Sitemap `Content-Type` now explicitly specifies `charset=UTF-8`.
+
 ## v0.0.25 (2016-10-20)
 
 * Pass `req` object to `.add()` callback, useful for dealing with multi-domain

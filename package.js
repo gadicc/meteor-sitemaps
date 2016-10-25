@@ -1,7 +1,7 @@
 Package.describe({
 	name: "gadicohen:sitemaps",
   summary: "functions to easily output valid sitemaps",
-  version: "0.0.25",
+  version: "0.0.26",
   git: 'https://github.com/gadicc/meteor-sitemaps.git'
 });
 
