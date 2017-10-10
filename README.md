@@ -98,7 +98,7 @@ information in a Collection).
     priority: 0.8
     // Optional.  https://support.google.com/webmasters/answer/2620865
     // Again, the base URL is automatically prepended to the href key
-    xHtmlLinks: [
+    xhtmlLinks: [
       { ref: 'alternate', 'hreflang': 'en', 'href': 'en/blah' },
       { ref: 'alternate', 'hreflang': 'de', 'href': 'de/blah' }
     ],
