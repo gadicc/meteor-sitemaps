@@ -4,9 +4,15 @@
 
 Copyright (c) 2013 by Gadi Cohen <dragon@wastelands.net> and released under the MIT license (see LICENSE.txt).
 
-### Quick Start
+## Important
 
-A simple example is shown below, with more complicated examples further down.  Sitemaps are dynamic (generated "on-the-fly" at request time), intended for moderate use with the latest data from your database.  If you have more than a few hundred pages and/or are crawled at high frequency, you may be better off creating a static sitemap.
+**Sitemaps are *dynamic* (generated "on-the-fly" at request time), i.e. *no sitemaps.xml file is persisted on disk*.**
+
+The package is intended for moderate use with the latest data from your database.  If you have more than a few hundred pages and/or are crawled at high frequency, you may be better off creating a static sitemap.  PRs to cache recent requests (optionally persisting on disk or elsewhere) are welcome.
+
+## Quick Start
+
+A simple example is shown below, with more complicated examples further down.  
 
 ```bash
 meteor add gadicohen:sitemaps
@@ -56,7 +62,7 @@ of the last page update (`updatedAt` from the database?).  If you always use
 the current time, Google will penalize you (or at the very least, ignore this
 field on future crawls).
 
-### Full Usage
+## Full Usage
 
 ```js
 // To add a sitemap
@@ -66,7 +72,7 @@ sitemaps.add(url, list);
 sitemaps.config('gzip', true/false); // default to false
 ```
 
-#### URL
+### URL
 
 The obvious example is `/sitemap.xml`.  You can call the function
 more than once to have many different (types of) sitemaps.  The URL is added
@@ -78,7 +84,7 @@ reference other URLs in its own path or descendant paths.  e.g. `/sitemap.xml`
 can reference all URLs on the site.  `/articles/sitemap.xml` can only reference
 other pages in the `/articles/` directory/path/route.
 
-#### List (Array or Function)
+### List (Array or Function)
 
 The list can either be an array in the following format, or a function that
 returns an array in the following format (e.g. a function that iterates over
@@ -98,7 +104,7 @@ information in a Collection).
     priority: 0.8
     // Optional.  https://support.google.com/webmasters/answer/2620865
     // Again, the base URL is automatically prepended to the href key
-    xhtmlLinks: [
+    xHtmlLinks: [
       { ref: 'alternate', 'hreflang': 'en', 'href': 'en/blah' },
       { ref: 'alternate', 'hreflang': 'de', 'href': 'de/blah' }
     ],
@@ -123,7 +129,7 @@ information in a Collection).
 Other options might come soon, e.g. to automatically use routes in your app
 to build the sitemap.
 
-#### Example (from Meteorpedia)
+### Example (from Meteorpedia)
 
 ```js
 // To compress all sitemap as gzip file
@@ -146,7 +152,7 @@ sitemaps.add('/mw_AllPages_sitemap.xml.gz', function(req) {
 
 You can see this output here: http://www.meteorpedia.com/mw_AllPages_sitemap.xml
 
-#### Locations (page, loc, href, etc)
+### Locations (page, loc, href, etc)
 
 Anywhere where a url can be provided, you can provide a "relative URL" (with
 or without a leading /), and Meteor.absoluteUrl() will be prepended.  You
