@@ -6,7 +6,7 @@ Copyright (c) 2013 by Gadi Cohen <dragon@wastelands.net> and released under the 
 
 ## Important
 
-**Sitemaps are *dynamic* (generated "on-the-fly" at request time), i.e. *no sitemaps.xml file is persisted on disk*.**
+**Sitemaps are *dynamic* (generated "on-the-fly" at request time), i.e. *no sitemap.xml file is persisted on disk*.  You can check your sitemap at http://localhost:3000/sitemap.xml (or wherever you defined it).**
 
 The package is intended for moderate use with the latest data from your database.  If you have more than a few hundred pages and/or are crawled at high frequency, you may be better off creating a static sitemap.  PRs to cache recent requests (optionally persisting on disk or elsewhere) are welcome.
 
